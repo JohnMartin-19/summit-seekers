@@ -7,7 +7,7 @@ from rest_framework.authtoken.views import obtain_auth_token # If you want a bas
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('expeditions.urls')), # Include your API URLs
+    path('api/v1/', include('expeditions.urls')), # Include your API URLs
     # Optional: Django Rest Framework's browsable API login/logout
     path('api-auth/', include('rest_framework.urls')),
     # Optional: Direct token creation endpoint

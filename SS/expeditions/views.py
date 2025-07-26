@@ -1,22 +1,194 @@
 # expeditions/views.py (Replace existing content or add to it)
+from pyexpat.errors import messages
+from django.utils.decorators import method_decorator
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, AllowAny
 from rest_framework.authtoken.models import Token # For TokenAuthentication
 from django.contrib.auth import authenticate, login, logout # For user login/logout
+from rest_framework_simplejwt.tokens import RefreshToken,AccessToken
+from rest_framework_simplejwt.views import TokenObtainPairView
+import logging
+import os
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
-from .models import Expedition, ExpeditionDate, Booking, Participant
-from .serializers import (
-    ExpeditionSerializer, ExpeditionDateSerializer,
-    BookingSerializer, BookingDetailSerializer, ParticipantSerializer,
-    UserRegistrationSerializer
-)
+from datetime import timedelta,datetime
+from rest_framework_simplejwt.token_blacklist.models import OutstandingToken, BlacklistedToken
+                
+from .models import *
+from .serializers import *
 from django.db import transaction
 from django_filters.rest_framework import DjangoFilterBackend # If using filters
-
+from django.conf import settings
+# 👇 Swagger import
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+from rest_framework_simplejwt.tokens import RefreshToken,AccessToken
+from rest_framework_simplejwt.views import TokenObtainPairView
 # --- API Endpoints ---
 
+logger = logging.getLogger(__name__)
+
+
+
+# --- User Authentication API Views ---
+method_decorator(csrf_exempt)
+class RegisterView(APIView):
+
+    permission_classes = (AllowAny,)
+    @swagger_auto_schema(request_body=RegisterSerializer)
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+#AUTHENTICATION VIEWS(LOGIN,LOGOUT,PASSWORD RESET,SOCIAL AUTHENTICATION )
+
+class LoginView(TokenObtainPairView):
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'email': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_EMAIL),
+                'password': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_PASSWORD),
+            },
+            required=['email', 'password']
+        ),
+        responses={
+            200: openapi.Schema(
+                type=openapi.TYPE_OBJECT,
+                properties={
+                    'access_token': openapi.Schema(type=openapi.TYPE_STRING),
+                    'refresh_token': openapi.Schema(type=openapi.TYPE_STRING),
+                    'user': openapi.Schema(type=openapi.TYPE_OBJECT, description="User details if JWT_AUTH_RETURN_USER is True in dj-rest-auth settings")
+                }
+            ),
+            400: "Bad Request",
+            401: "Unauthorized"
+        }
+    )
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data = request.data)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except Exception as e:
+            logger.error(f"Token validation failed: {e}")
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        authenticated_user = serializer.user
+
+        if not authenticated_user or not authenticated_user.is_authenticated:
+            logger.error('Authenticated user object is invalid or not authenticated after serializer validation')
+            return Response({'error': "Authentication failed unexpectedly"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        access_token = str(serializer.validated_data['access'])
+        refresh_token = str(serializer.validated_data['refresh'])
+
+        access_token_lifetime = settings.SIMPLE_JWT.get('ACCESS_TOKEN_LIFETIME', timedelta(minutes=60))
+        expires_at_utc = datetime.utcnow() + access_token_lifetime
+
+
+        response_data = {
+            'access_token': access_token,
+            'refresh_token': refresh_token,
+        }
+
+        if settings.REST_AUTH.get('JWT_AUTH_RETURN_EXPIRATION', False):
+             response_data['access_token_expires_at'] = expires_at_utc.isoformat() + 'Z' 
+
+     
+        if settings.REST_AUTH.get('JWT_AUTH_RETURN_USER', False):
+            from .serializers import UserSerializer 
+            user_serializer = UserSerializer(authenticated_user)
+            response_data['user'] = user_serializer.data
+
+
+        return Response(response_data, status=status.HTTP_200_OK)
+
+
+class LogoutView(APIView):
+    @swagger_auto_schema(
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'refresh_token': openapi.Schema(type=openapi.TYPE_STRING, description="The refresh token to blacklist"),
+                'access_token': openapi.Schema(type=openapi.TYPE_STRING, description="The access token to blacklist (optional for extra security)")
+            },
+            required=['refresh_token'] 
+        ),
+        responses={
+            200: "Logged out successfully",
+            400: "Bad Request"
+        }
+    )
+    def post(self, request):
+        try:
+            refresh_token_string = request.data.get('refresh_token')
+            access_token_string = request.data.get("access_token") 
+
+            if not refresh_token_string:
+                return Response({'error': 'Refresh token is required for logout.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            #blacklist the refresh token
+            try:
+                refresh_token_obj = RefreshToken(refresh_token_string)
+                outstanding_token = OutstandingToken.objects.get(token=refresh_token_obj.token)
+                BlacklistedToken.objects.get_or_create(token=outstanding_token)
+                logger.info(f"Refresh token blacklisted successfully: {refresh_token_obj.payload.get('user_id')}")
+
+            except OutstandingToken.DoesNotExist:
+                logger.warning(f"Attempted to blacklist a refresh token that does not exist as an outstanding token: {refresh_token_string[:10]}...")
+            except Exception as e:
+                logger.error(f"Failed to blacklist refresh token: {e}", exc_info=True)
+                return Response({'error': 'Failed to process refresh token logout.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            if access_token_string:
+                try:
+                    access_token_obj = AccessToken(access_token_string)
+                    access_token_obj.blacklist() 
+                    logger.info(f"Access token blacklisted successfully: {access_token_obj.payload.get('user_id')}")
+                except Exception as e:
+                    logger.warning(f"Failed to blacklist access token during logout: {e}", exc_info=True)
+
+            # proceed to delete cookies if JWT_AUTH_COOKIE is enabled
+            response = Response({'message': 'Logged out successfully'}, status=status.HTTP_200_OK)
+            
+            # Check for REST_AUTH settings before accessing them
+            if hasattr(settings, 'REST_AUTH') and settings.REST_AUTH:
+                if settings.REST_AUTH.get('JWT_AUTH_COOKIE'):
+                    response.delete_cookie(settings.REST_AUTH['JWT_AUTH_COOKIE'])
+                    logger.info("Access token cookie deleted.")
+                if settings.REST_AUTH.get('JWT_AUTH_REFRESH_COOKIE'):
+                    response.delete_cookie(settings.REST_AUTH['JWT_AUTH_REFRESH_COOKIE'])
+                    logger.info("Refresh token cookie deleted.")
+            else:
+                logger.warning("REST_AUTH settings not found or empty, skipping cookie deletion based on settings.")
+
+
+            return response
+        except Exception as e:
+            logger.error(f"Logout failed unexpectedly: {e}", exc_info=True) 
+            return Response({'error': 'An unexpected error occurred during logout.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) # Use 500 for unexpected server errors
+
+
+class UserProfileAPIView(generics.RetrieveAPIView):
+    """
+    API endpoint to retrieve logged-in user's profile.
+    """
+    serializer_class = RegisterSerializer # Or a dedicated UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+
+###################### MAIN BUSINESS LOGIC #############################
 class ExpeditionListAPIView(generics.ListAPIView):
     """
     API endpoint to list all active expeditions.
@@ -171,59 +343,3 @@ class MpesaCallbackAPIView(APIView):
             print(f"Received data: {data}")
             return Response({"message": "Error processing callback"}, status=status.HTTP_400_BAD_REQUEST)
 
-# --- User Authentication API Views ---
-
-class UserRegistrationAPIView(generics.CreateAPIView):
-    """
-    API endpoint for user registration.
-    """
-    serializer_class = UserRegistrationSerializer
-    permission_classes = [AllowAny] # Anyone can register
-
-class UserLoginAPIView(APIView):
-    """
-    API endpoint for user login. Returns authentication token.
-    """
-    permission_classes = [AllowAny]
-
-    def post(self, request, *args, **kwargs):
-        username = request.data.get('username')
-        password = request.data.get('password')
-
-        user = authenticate(request, username=username, password=password)
-
-        if user:
-            login(request, user) # This logs in the user for session authentication too
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({
-                "message": "Login successful",
-                "user_id": user.id,
-                "username": user.username,
-                "token": token.key
-            }, status=status.HTTP_200_OK)
-        return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
-
-class UserLogoutAPIView(APIView):
-    """
-    API endpoint for user logout. Invalidates authentication token.
-    """
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, *args, **kwargs):
-        try:
-            request.user.auth_token.delete() # Delete the token
-        except (AttributeError, Token.DoesNotExist):
-            pass # No token to delete, or user not authenticated by token
-
-        logout(request) # For session authentication
-        return Response({"message": "Successfully logged out."}, status=status.HTTP_200_OK)
-
-class UserProfileAPIView(generics.RetrieveAPIView):
-    """
-    API endpoint to retrieve logged-in user's profile.
-    """
-    serializer_class = UserRegistrationSerializer # Or a dedicated UserProfileSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_object(self):
-        return self.request.user
