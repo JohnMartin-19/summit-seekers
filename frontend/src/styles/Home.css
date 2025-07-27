@@ -1,0 +1,177 @@
+/* frontend/src/styles/Home.css */
+
+/* Define Brand Colors as CSS Variables */
+:root {
+    --brand-blue: #1E5FA2; /* A strong blue from your logo */
+    --brand-green: #47A04B; /* A vibrant green from your logo */
+    --text-dark: #333;
+    --text-light: #f8f8f8;
+    --light-bg: #f8f8f8;
+    --white: #ffffff;
+}
+
+.homepage {
+    font-family: 'Arial', sans-serif;
+    color: var(--text-dark); /* Use text-dark variable */
+    line-height: 1.6;
+}
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: var(--white); /* White text on dark background */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    background-image: url(../assests/mt.kenya.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.hero-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    background-size: cover;
+    background-position: center top;
+    z-index: -2;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* Keep dark overlay */
+    z-index: -1;
+}
+
+.hero-content {
+    text-align: center;
+    z-index: 1;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.hero-content h1 {
+    font-size: 4em;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+    /* Maybe a subtle green for the title or keep white */
+    /* color: var(--brand-green); */
+}
+
+.hero-content .lead-text {
+    font-size: 1.5em;
+    margin-bottom: 40px;
+}
+
+.explore-button {
+    background-color: var(--brand-green); /* Use brand green for the button */
+    color: var(--white);
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.explore-button:hover {
+    background-color: var(--brand-blue); /* Hover to brand blue */
+}
+
+/* General Section Styling */
+.section-content {
+    padding: 80px 20px;
+    text-align: center;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.section-content h2 {
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    color: var(--brand-blue); /* Headings in brand blue */
+}
+
+.section-content p {
+    font-size: 1.1em;
+    margin-bottom: 20px;
+}
+
+.bg-light-gray {
+    background-color: var(--light-bg); /* Use light background variable */
+}
+
+/* Features Grid (Why Choose Us) */
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.feature-item {
+    background-color: var(--white);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-5px);
+}
+
+.feature-item h3 {
+    color: var(--brand-green); /* Feature headings in brand green */
+    margin-bottom: 15px;
+}
+
+/* Call to Action Section */
+.cta-section {
+    background-color: var(--brand-blue); /* CTA section background in brand blue */
+    color: var(--white);
+}
+
+.cta-section .lead-text {
+    font-size: 1.3em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 3em;
+    }
+    .hero-content .lead-text {
+        font-size: 1.2em;
+    }
+    .section-content h2 {
+        font-size: 2em;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 2.5em;
+    }
+    .hero-content .lead-text {
+        font-size: 1em;
+    }
+    .explore-button {
+        padding: 12px 25px;
+        font-size: 1em;
+    }
+    .section-content {
+        padding: 50px 15px;
+    }
+}
