@@ -1,0 +1,55 @@
+/* Header.css */
+
+.header-nav a {
+    text-decoration: none;
+    transition: text-decoration 0.3s ease; /* Smooth transition for the underline */
+}
+
+.header-nav a:hover {
+    text-decoration: underline;
+}
+
+/* Specific colors for your links */
+.header-nav a.home-link,
+.header-nav a.expeditions-link,
+.header-nav a.about-link,
+.header-nav a.blogs-link {
+    color: var(--text-dark); /* Use your CSS variables */
+}
+
+.header-nav a.login-link {
+    color: var(--brand-green);
+    font-weight: bold;
+}
+
+.header-nav a.register-link {
+    color: var(--brand-blue);
+    font-weight: bold;
+}
+
+/* Logo Link */
+.header-logo-link {
+    text-decoration: none;
+    color: var(--brand-blue);
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+.header-logo-link:hover {
+    text-decoration: none; /* Ensure logo link doesn't get underlined */
+}
+
+/* General header/nav styling (move from inline) */
+.main-header {
+    background: white;
+    padding: 1rem;
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}

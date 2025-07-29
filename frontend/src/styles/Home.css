@@ -26,9 +26,10 @@
     overflow: hidden;
     color: var(--white); /* White text on dark background */
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    background-image: url(../assests/mt.kenya.jpg);
+    background-image: url(../assests/bg.jpg);
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: center top;
 }
 
 .hero-background {

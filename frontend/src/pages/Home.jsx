@@ -3,13 +3,12 @@ import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
-// Import your custom CSS for this page
-import '../styles/Home.css'; // We'll create this file next
+import '../styles/Home.css'; 
 
 const Home = () => {
-    // Framer Motion scroll hooks for a simple parallax effect
+   
     const { scrollY } = useScroll();
-    const yBg = useTransform(scrollY, [0, 500], [0, -100]); // Background moves up slightly slower than scroll
+    const yBg = useTransform(scrollY, [0, 500], [0, -100]); 
 
     // Animation variants for hero text
     const textVariants = {
@@ -48,8 +47,10 @@ const Home = () => {
                     animate="visible"
                     variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
                 >
-                    <motion.h1 variants={textVariants}>Summit Seekers</motion.h1>
+                    {/* <motion.h1 variants={textVariants}>Summit Seekers Expeditions</motion.h1> */}
+                    
                     <motion.p variants={textVariants} className="lead-text">
+                        <br /><br />
                         Unforgettable Expeditions to East Africa's Highest Peaks
                     </motion.p>
                     <Link to="/expeditions">
@@ -109,6 +110,10 @@ const Home = () => {
                         <div className="feature-item">
                             <h3>Unforgettable Scenery</h3>
                             <p>Explore breathtaking vistas and diverse ecosystems unique to East Africa.</p>
+                        </div>
+                        <div className="feature-item">
+                            <h3>Gorpcore Style</h3>
+                            <p>Fashion in mountaineering? We love that. Incorporating gortex fashion in our alpinic adventures.</p>
                         </div>
                     </div>
                 </div>
