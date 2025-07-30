@@ -2,7 +2,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
-import Footer from './components/Footer';
+import AppFooter from './components/Footer';
 
 // Page Components
 import Home from './pages/Home';
@@ -28,7 +28,8 @@ function App() {
                 {/* Fallback for unknown routes */}
                 <Route path="*" element={<div>404 Not Found</div>} />
             </Routes>
-            <Footer />
+            <br/>
+            <AppFooter />
         </Router>
     );
 }

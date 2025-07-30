@@ -2,8 +2,18 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import FeatureImageCard from '../components/FeatureImageCard'; 
-import gorpcore from '../assets/features/gorpcore.jpeg'
+import FeatureImageCard from '../components/FeatureImageCard';
+
+// Since your images are in `src/assets`, you SHOULD import them like this.
+// Webpack will handle bundling them correctly.
+import safetyImage from '../assets/features/safety.jpg';
+import sustImage from '../assets/features/sust.jpg';
+import tailoredImage from '../assets/features/tailored.jpg';
+import sceneryImage from '../assets/features/scenery.jpg';
+import gorpcoreImage from '../assets/features/gorpcore.jpg';
+// Assuming mt-kenya-hero.jpg is ALSO in src/assets/
+import mtKenyaHero from '../assets/bg.jpg'; // Corrected import for hero image
+
 import '../styles/Home.css';
 
 const Home = () => {
@@ -30,31 +40,31 @@ const Home = () => {
     const featuresData = [
         {
             id: 1,
-            image: '/assets/features/safety.jpg', 
+            image: safetyImage,
             title: 'Safety & Expertise',
             description: 'Certified guides, rigorous safety protocols, and deep local knowledge for a secure adventure.'
         },
         {
             id: 2,
-            image: '../assets/features/sustainability.jpeg', 
+            image: sustImage,
             title: 'Sustainable Tourism',
             description: 'We champion eco-friendly practices and support local communities on every expedition.'
         },
         {
             id: 3,
-            image: '/assets/features/tailored.jpg',
+            image: tailoredImage,
             title: 'Tailored Experiences',
             description: 'Customizable itineraries and private treks to fit your pace and preferences.'
         },
         {
             id: 4,
-            image: '/assets/features/scenery.jpg',
+            image: sceneryImage,
             title: 'Unforgettable Scenery',
             description: 'Explore breathtaking vistas and diverse ecosystems unique to East Africa.'
         },
         {
             id: 5,
-            image: {gorpcore}, 
+            image: gorpcoreImage,
             title: 'Gorpcore Style',
             description: 'Fashion in mountaineering? We love that. Incorporating Gore-Tex fashion in our alpinic adventures.'
         }
@@ -66,7 +76,7 @@ const Home = () => {
             <section className="hero-section">
                 <motion.div
                     className="hero-background"
-                    style={{ y: yBg, backgroundImage: 'url("/assets/mt-kenya-hero.jpg")' }}
+                    style={{ y: yBg, backgroundImage: `url(${mtKenyaHero})` }} // Using imported image variable
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1.5 }}
@@ -78,6 +88,8 @@ const Home = () => {
                     animate="visible"
                     variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
                 >
+                    <br />
+                    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
                     <motion.h1 variants={textVariants}>Summit Seekers</motion.h1>
                     <motion.p variants={textVariants} className="lead-text">
                         Unforgettable Expeditions to East Africa's Highest Peaks
@@ -130,7 +142,7 @@ const Home = () => {
                                 image={feature.image}
                                 title={feature.title}
                                 description={feature.description}
-                                delay={index * 0.1} 
+                                delay={index * 0.1}
                             />
                         ))}
                     </div>
@@ -161,6 +173,7 @@ const Home = () => {
                     </Link>
                 </div>
             </motion.section>
+            {/* Removed the extra closing </motion.section> that was causing the error */}
         </div>
     );
 };

@@ -26,7 +26,7 @@
     justify-content: center;
     overflow: hidden;
     color: var(--white);
-    background-image: url(../assets/bg.jpg);
+    background-image: url(../assets/murima.jpg);
     background-size: cover;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
@@ -238,4 +238,44 @@
     .section-content {
         padding: 50px 15px;
     }
+}
+
+
+/* Existing CSS... */
+
+/* Custom Footer Styling */
+.custom-footer {
+    background-color: var(--brand-blue) !important; /* Force brand blue background */
+    color: var(--white) !important; /* White text */
+    padding: 2rem 1rem !important; /* More padding */
+    border-top: none !important; /* Remove any default border-top from flowbite */
+}
+
+.custom-footer .text-gray-900,
+.custom-footer .text-gray-700,
+.custom-footer .text-white {
+    /* This is tricky as Flowbite uses Tailwind classes.
+       You might need to target specific Flowbite elements if the above doesn't work.
+       For example, the name prop of FooterBrand might get default text color. */
+    color: var(--white) !important; /* Ensure all text is white */
+}
+
+/* Adjust FlowbiteLink colors */
+.custom-footer .footer-link-group a {
+    color: var(--white) !important;
+    transition: color 0.3s ease;
+}
+
+.custom-footer .footer-link-group a:hover {
+    color: var(--brand-green) !important; /* Hover effect with brand green */
+}
+
+/* For copyright text */
+.custom-footer .footer-copyright-wrapper span {
+    color: var(--white) !important;
+}
+
+/* Further overrides if needed for specific Flowbite elements */
+.custom-footer .flex.items-center.sm\\:justify-between div div.text-gray-900.dark\\:text-white.text-xl.font-semibold {
+    color: var(--white) !important; /* Target the brand name text */
 }

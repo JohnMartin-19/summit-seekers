@@ -1,55 +1,121 @@
-/* Header.css */
+/* frontend/src/styles/Header.css */
 
-.header-nav a {
-    text-decoration: none;
-    transition: text-decoration 0.3s ease; /* Smooth transition for the underline */
+/* Define Brand Colors (ensure these are in your global CSS like index.css or App.css too) */
+:root {
+    --brand-blue: #1E5FA2;
+    --brand-green: #47A04B;
+    --text-dark: #333;
+    --text-light: #f8f8f8;
+    --white: #ffffff;
+    --transparent-header-text: rgba(255, 255, 255, 0.9); /* Slightly transparent white for links on dark background */
 }
 
-.header-nav a:hover {
-    text-decoration: underline;
-}
-
-/* Specific colors for your links */
-.header-nav a.home-link,
-.header-nav a.expeditions-link,
-.header-nav a.about-link,
-.header-nav a.blogs-link {
-    color: var(--text-dark); /* Use your CSS variables */
-}
-
-.header-nav a.login-link {
-    color: var(--brand-green);
-    font-weight: bold;
-}
-
-.header-nav a.register-link {
-    color: var(--brand-blue);
-    font-weight: bold;
-}
-
-/* Logo Link */
-.header-logo-link {
-    text-decoration: none;
-    color: var(--brand-blue);
-    font-weight: bold;
-    font-size: 1.5em;
-}
-
-.header-logo-link:hover {
-    text-decoration: none; /* Ensure logo link doesn't get underlined */
-}
-
-/* General header/nav styling (move from inline) */
-.main-header {
-    background: white;
+/* Base Header Styles (transparent state) */
+.app-header {
+    position: fixed; /* Make header fixed so it stays on top */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure it's above other content */
+    background: transparent; /* Start transparent */
     padding: 1rem;
-    border-bottom: 1px solid #e7e7e7;
+    border-bottom: 1px solid transparent; /* Start with transparent border */
+    transition: background 0.3s ease-in-out, border-bottom 0.3s ease-in-out, padding 0.3s ease-in-out; /* Smooth transition */
 }
 
-.main-nav {
+/* Scrolled state styles */
+.app-header.scrolled {
+    background: var(--white); /* White background on scroll */
+    border-bottom: 1px solid #e7e7e7; /* Light border on scroll */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow on scroll */
+    padding: 0.8rem 1rem; /* Slightly reduced padding on scroll */
+}
+
+/* Navigation Container within Header */
+.app-header nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
+}
+
+/* Header Logo */
+.header-logo {
+    height: 70px; /* Base size */
+    width: auto; /* Maintain aspect ratio */
+    transition: height 0.3s ease-in-out; /* Smooth transition for logo size */
+}
+
+/* Scrolled state for Header Logo (optional: make it slightly smaller) */
+.app-header.scrolled .header-logo {
+    height: 50px; /* Smaller logo when scrolled */
+}
+
+
+/* Navigation Links Default (for transparent state) */
+.header-nav .nav-link {
+    margin: 0 10px;
+    text-decoration: none;
+    color: var(--transparent-header-text); /* White/light color for links initially */
+    font-weight: bold;
+    transition: color 0.3s ease-in-out;
+}
+
+/* Navigation Links when Scrolled */
+.app-header.scrolled .header-nav .nav-link {
+    color: var(--text-dark); /* Dark text when scrolled */
+}
+
+/* Hover effect for all nav links */
+.header-nav .nav-link:hover {
+    color: var(--brand-green); /* Hover color */
+}
+
+
+/* Specific styles for Login/Register buttons */
+.header-nav .login-btn {
+    color: var(--brand-green); /* Green for login */
+}
+.app-header.scrolled .header-nav .login-btn {
+    color: var(--brand-green); /* Keep green when scrolled */
+}
+
+
+.header-nav .register-btn {
+    color: var(--brand-blue); /* Blue for register */
+}
+.app-header.scrolled .header-nav .register-btn {
+    color: var(--brand-blue); /* Keep blue when scrolled */
+}
+
+/* Adjust button hover for transparent state if needed (e.g., if hero background is dark) */
+.app-header:not(.scrolled) .header-nav .login-btn:hover,
+.app-header:not(.scrolled) .header-nav .register-btn:hover {
+    color: var(--white); /* Example: white hover on transparent background */
+}
+
+
+/* Basic Responsive adjustments for Header */
+@media (max-width: 768px) {
+    .app-header nav {
+        flex-direction: column; /* Stack logo and nav links */
+        align-items: flex-start; /* Align to left when stacked */
+    }
+
+    .header-nav {
+        margin-top: 15px; /* Space between logo and stacked links */
+        width: 100%; /* Take full width */
+        display: flex;
+        flex-wrap: wrap; /* Allow links to wrap */
+        justify-content: center; /* Center links */
+    }
+
+    .header-nav .nav-link {
+        margin: 5px 8px; /* Adjust spacing for stacked links */
+    }
+
+    .app-header.scrolled .header-logo {
+        height: 40px; /* Smaller logo on scroll for mobile */
+    }
 }
