@@ -2,32 +2,63 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-
-import '../styles/Home.css'; 
+import FeatureImageCard from '../components/FeatureImageCard'; 
+import gorpcore from '../assets/features/gorpcore.jpeg'
+import '../styles/Home.css';
 
 const Home = () => {
-   
     const { scrollY } = useScroll();
-    const yBg = useTransform(scrollY, [0, 500], [0, -100]); 
+    const yBg = useTransform(scrollY, [0, 500], [0, -100]);
 
-    // Animation variants for hero text
     const textVariants = {
         hidden: { opacity: 0, y: 50 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
     };
 
-    // Animation variants for the button
     const buttonVariants = {
         hidden: { opacity: 0, scale: 0.8 },
         visible: { opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.5 } },
         hover: { scale: 1.05, transition: { type: "spring", stiffness: 400, damping: 10 } }
     };
 
-    // Animation variants for content sections
     const sectionVariants = {
         hidden: { opacity: 0, y: 50 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } }
     };
+
+    // Data for the feature cards
+    const featuresData = [
+        {
+            id: 1,
+            image: '/assets/features/safety.jpg', 
+            title: 'Safety & Expertise',
+            description: 'Certified guides, rigorous safety protocols, and deep local knowledge for a secure adventure.'
+        },
+        {
+            id: 2,
+            image: '../assets/features/sustainability.jpeg', 
+            title: 'Sustainable Tourism',
+            description: 'We champion eco-friendly practices and support local communities on every expedition.'
+        },
+        {
+            id: 3,
+            image: '/assets/features/tailored.jpg',
+            title: 'Tailored Experiences',
+            description: 'Customizable itineraries and private treks to fit your pace and preferences.'
+        },
+        {
+            id: 4,
+            image: '/assets/features/scenery.jpg',
+            title: 'Unforgettable Scenery',
+            description: 'Explore breathtaking vistas and diverse ecosystems unique to East Africa.'
+        },
+        {
+            id: 5,
+            image: {gorpcore}, 
+            title: 'Gorpcore Style',
+            description: 'Fashion in mountaineering? We love that. Incorporating Gore-Tex fashion in our alpinic adventures.'
+        }
+    ];
 
     return (
         <div className="homepage">
@@ -35,27 +66,25 @@ const Home = () => {
             <section className="hero-section">
                 <motion.div
                     className="hero-background"
-                    style={{ y: yBg, backgroundImage: 'url("../assets/mt.kenya.jpg")' }} // Use your image here
+                    style={{ y: yBg, backgroundImage: 'url("/assets/mt-kenya-hero.jpg")' }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1.5 }}
                 />
-                <div className="hero-overlay"></div> {/* Optional: for a subtle darkening effect */}
+                <div className="hero-overlay"></div>
                 <motion.div
                     className="hero-content"
                     initial="hidden"
                     animate="visible"
                     variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
                 >
-                    {/* <motion.h1 variants={textVariants}>Summit Seekers Expeditions</motion.h1> */}
-                    
+                    <motion.h1 variants={textVariants}>Summit Seekers</motion.h1>
                     <motion.p variants={textVariants} className="lead-text">
-                        <br /><br />
                         Unforgettable Expeditions to East Africa's Highest Peaks
                     </motion.p>
                     <Link to="/expeditions">
                         <motion.button
-                            className="explore-button" // Use a custom class for styling
+                            className="explore-button"
                             variants={buttonVariants}
                             whileHover="hover"
                         >
@@ -70,7 +99,7 @@ const Home = () => {
                 className="section-content"
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, amount: 0.5 }} // Trigger when 50% of element is in view
+                viewport={{ once: true, amount: 0.5 }}
                 variants={sectionVariants}
             >
                 <div className="container">
@@ -84,7 +113,7 @@ const Home = () => {
                 </div>
             </motion.section>
 
-            {/* --- Why Choose Us Section --- */}
+            {/* --- Why Choose Us Section with Image Cards --- */}
             <motion.section
                 className="section-content bg-light-gray"
                 initial="hidden"
@@ -95,26 +124,15 @@ const Home = () => {
                 <div className="container">
                     <h2>Why Choose Summit Seekers?</h2>
                     <div className="features-grid">
-                        <div className="feature-item">
-                            <h3>Safety & Expertise</h3>
-                            <p>Certified guides, rigorous safety protocols, and deep local knowledge for a secure adventure.</p>
-                        </div>
-                        <div className="feature-item">
-                            <h3>Sustainable Tourism</h3>
-                            <p>We champion eco-friendly practices and support local communities on every expedition.</p>
-                        </div>
-                        <div className="feature-item">
-                            <h3>Tailored Experiences</h3>
-                            <p>Customizable itineraries and private treks to fit your pace and preferences.</p>
-                        </div>
-                        <div className="feature-item">
-                            <h3>Unforgettable Scenery</h3>
-                            <p>Explore breathtaking vistas and diverse ecosystems unique to East Africa.</p>
-                        </div>
-                        <div className="feature-item">
-                            <h3>Gorpcore Style</h3>
-                            <p>Fashion in mountaineering? We love that. Incorporating gortex fashion in our alpinic adventures.</p>
-                        </div>
+                        {featuresData.map((feature, index) => (
+                            <FeatureImageCard
+                                key={feature.id}
+                                image={feature.image}
+                                title={feature.title}
+                                description={feature.description}
+                                delay={index * 0.1} 
+                            />
+                        ))}
                     </div>
                 </div>
             </motion.section>
