@@ -1,34 +1,24 @@
 /* frontend/src/styles/Home.css */
 
-/* Define Brand Colors as CSS Variables */
-:root {
-    --brand-blue: #1E5FA2; /* A strong blue from your logo */
-    --brand-green: #47A04B; /* A vibrant green from your logo */
-    --text-dark: #333;
-    --text-light: #f8f8f8;
-    --light-bg: #f8f8f8;
-    --white: #ffffff;
-    --overlay-color: rgba(0, 0, 0, 0.6); /* Darker tint for overlay */
-}
-
+/* --- Page Transition Styles --- */
+/* These styles will be applied by Framer Motion's AnimatePresence */
 .homepage {
-    font-family: 'Arial', sans-serif;
-    color: var(--text-dark);
-    line-height: 1.6;
+    /* Ensure the homepage content takes up space, especially before transitions finish */
+    position: relative; /* Or static if not overlapping */
+    min-height: 100vh; /* Ensure enough height for scrolling */
+    overflow-x: hidden; /* Prevent horizontal scroll from page transitions */
 }
 
-/* Hero Section */
+/* --- Hero Section --- */
 .hero-section {
     position: relative;
-    height: 100vh;
+    height: 100vh; /* Full viewport height */
     display: flex;
-    align-items: center;
     justify-content: center;
-    overflow: hidden;
-    color: var(--white);
-    background-image: url(../assets/murima.jpg);
-    background-size: cover;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    align-items: center;
+    overflow: hidden; /* Important for parallax */
+    text-align: center;
+    color: white; /* Ensure text is visible on hero background */
 }
 
 .hero-background {
@@ -36,11 +26,10 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 120%;
+    height: 120%; /* Taller than viewport for parallax effect */
     background-size: cover;
-    background-position: center top;
-    z-index: -2;
-   
+    background-position: center bottom; /* Adjust as needed */
+    z-index: -1; /* Behind content */
 }
 
 .hero-overlay {
@@ -49,51 +38,56 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
     z-index: -1;
 }
 
 .hero-content {
-    text-align: center;
+    position: relative;
     z-index: 1;
-    max-width: 800px;
     padding: 20px;
+    max-width: 800px;
 }
 
 .hero-content h1 {
-    font-size: 4em;
+    font-size: 4em; /* Adjust as needed */
     margin-bottom: 20px;
-    letter-spacing: 2px;
+    line-height: 1.1;
+    font-weight: 700;
 }
 
 .hero-content .lead-text {
     font-size: 1.5em;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 .explore-button {
     background-color: var(--brand-green);
-    color: var(--white);
-    border: none;
+    color: white;
     padding: 15px 30px;
-    font-size: 1.2em;
+    border: none;
     border-radius: 5px;
+    font-size: 1.2em;
     cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: background-color 0.3s ease;
+    text-decoration: none; /* For Link */
+    display: inline-block; /* For Link */
 }
 
 .explore-button:hover {
-    background-color: var(--brand-blue);
+    background-color: #3e8e41; /* Darker green on hover */
 }
 
-/* General Section Styling */
+/* --- General Section Styles --- */
 .section-content {
     padding: 80px 20px;
     text-align: center;
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
+    opacity: 0; /* Will be animated by GSAP/Framer Motion */
+}
+
+.section-content.bg-light-gray {
+    background-color: #f8f8f8;
 }
 
 .section-content h2 {
@@ -104,114 +98,163 @@
 
 .section-content p {
     font-size: 1.1em;
+    line-height: 1.6;
     margin-bottom: 20px;
+    color: var(--text-dark);
 }
 
-.bg-light-gray {
-    background-color: var(--light-bg);
-}
-
-/* Features Grid (Image Cards) */
+/* Feature Grid */
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Adjusted for image cards */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
     margin-top: 40px;
 }
 
-/* Feature Image Card Styling */
-.feature-image-card {
-    position: relative;
-    width: 100%;
-    height: 300px; /* Fixed height for cards */
-    overflow: hidden;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
-}
-
-.feature-image-card:hover {
-    transform: translateY(-8px); /* Lift effect on hover */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-}
-
-.card-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    transition: transform 0.4s ease-out; /* Smooth zoom on hover */
-}
-
-.feature-image-card:hover .card-image {
-    transform: scale(1.05); /* Slight zoom on hover */
-}
-
-.card-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--overlay-color); /* Dark tint */
-    opacity: 0; /* Hidden initially */
-    transition: opacity 0.3s ease-out;
-}
-
-.feature-image-card:hover .card-overlay {
-    opacity: 1; /* Fully visible on hover */
-}
-
-.card-content {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+/* Feature Card (assuming FeatureImageCard has a root class 'feature-card') */
+.feature-card {
+    background-color: var(--white);
     padding: 20px;
-    color: var(--white);
-    text-align: left; /* Align text to left */
-    opacity: 0; /* Hidden initially */
-    transform: translateY(20px); /* Start slightly below */
-    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
-    z-index: 2; /* Ensure content is above overlay */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    opacity: 0; /* Animated by GSAP */
 }
 
-.feature-image-card:hover .card-content {
-    opacity: 1; /* Visible on hover */
-    transform: translateY(0); /* Slide up to position */
+.feature-card img {
+    max-width: 100%;
+    height: 200px; /* Fixed height for consistency */
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 15px;
 }
 
-.card-content h3 {
-    font-size: 1.5em;
+.feature-card h3 {
+    font-size: 1.4em;
+    color: var(--brand-blue);
     margin-bottom: 10px;
-    color: var(--white); /* Ensure headings are white on overlay */
 }
 
-.card-content p {
+.feature-card p {
     font-size: 0.95em;
-    line-height: 1.4;
-    margin-bottom: 0;
+    color: var(--text-dark);
 }
 
-
-/* Call to Action Section */
+/* CTA Section */
 .cta-section {
     background-color: var(--brand-blue);
-    color: var(--white);
+    color: white;
+    padding: 100px 20px;
+    text-align: center;
+}
+
+.cta-section h2 {
+    color: white;
 }
 
 .cta-section .lead-text {
-    font-size: 1.3em;
+    color: white;
 }
 
-/* Responsive adjustments */
+/* --- Bubbles Animation --- */
+.animated-bubbles-container {
+    position: fixed; /* Or absolute within a section */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2; /* Behind everything */
+    overflow: hidden;
+    pointer-events: none; /* Bubbles don't block clicks */
+}
+
+.bubble {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.1); /* Transparent white bubbles */
+    border-radius: 50%;
+    animation: floatBubbles 15s infinite ease-in-out; /* Animation name, duration, timing */
+}
+
+/* Individual bubble sizes and positions */
+.bubble:nth-child(1) { width: 40px; height: 40px; left: 10%; top: 20%; animation-duration: 18s; animation-delay: 0s; }
+.bubble:nth-child(2) { width: 60px; height: 60px; left: 30%; top: 50%; animation-duration: 15s; animation-delay: 2s; }
+.bubble:nth-child(3) { width: 50px; height: 50px; left: 70%; top: 10%; animation-duration: 20s; animation-delay: 4s; }
+.bubble:nth-child(4) { width: 80px; height: 80px; left: 85%; top: 60%; animation-duration: 17s; animation-delay: 6s; }
+.bubble:nth-child(5) { width: 30px; height: 30px; left: 5%; top: 80%; animation-duration: 19s; animation-delay: 8s; }
+.bubble:nth-child(6) { width: 70px; height: 70px; left: 50%; top: 30%; animation-duration: 16s; animation-delay: 10s; }
+.bubble:nth-child(7) { width: 45px; height: 45px; left: 20%; top: 70%; animation-duration: 14s; animation-delay: 12s; }
+
+@keyframes floatBubbles {
+    0% { transform: translateY(0) scale(1); opacity: 0.5; }
+    50% { transform: translateY(-50px) scale(1.1); opacity: 0.8; }
+    100% { transform: translateY(0) scale(1); opacity: 0.5; }
+}
+
+/* --- Horizontal Scroll Section --- */
+.horizontal-scroll-section {
+    display: flex; /* Make it a flex container */
+    width: 300%; /* Example: 3 panels of 100% width each */
+    height: 100vh; /* Or desired height */
+    position: relative; /* Needed for pinning */
+    overflow: hidden; /* Hide panels outside viewport initially */
+    background-color: #ADD8E6; /* Light blue background for this section */
+    color: var(--text-dark);
+}
+
+.horizontal-panel {
+    width: 100vw; /* Each panel takes full viewport width */
+    height: 100%;
+    flex-shrink: 0; /* Prevent panels from shrinking */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 50px;
+    box-sizing: border-box;
+}
+
+.horizontal-panel:nth-child(odd) {
+    background-color: #f0f8ff; /* Alternate background for panels */
+}
+
+
+/* --- Parallax Element (GSAP controlled) --- */
+.parallax-section {
+    position: relative;
+    overflow: hidden;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.parallax-element {
+    width: 80%;
+    max-width: 600px;
+    display: block;
+    margin: 50px auto;
+    border-radius: 10px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* --- SVG Animation Section (Placeholder Styling) --- */
+.svg-animation-section {
+    padding: 80px 20px;
+    text-align: center;
+    background-color: var(--light-gray); /* Or appropriate background */
+}
+
+/* ... existing CSS ... */
+
+/* Remove the extra <br/> tags from your Home.jsx hero content and use CSS for spacing */
+.hero-content {
+    padding-top: 20vh; /* Adjust as needed to push content down */
+    padding-bottom: 10vh;
+}
+
+/* Basic Mobile responsiveness */
 @media (max-width: 768px) {
     .hero-content h1 {
-        font-size: 3em;
+        font-size: 2.5em;
     }
     .hero-content .lead-text {
         font-size: 1.2em;
@@ -220,62 +263,9 @@
         font-size: 2em;
     }
     .features-grid {
-        grid-template-columns: 1fr; /* Stack cards on small screens */
+        grid-template-columns: 1fr;
     }
-}
-
-@media (max-width: 480px) {
-    .hero-content h1 {
-        font-size: 2.5em;
+    .horizontal-panel {
+        padding: 30px;
     }
-    .hero-content .lead-text {
-        font-size: 1em;
-    }
-    .explore-button {
-        padding: 12px 25px;
-        font-size: 1em;
-    }
-    .section-content {
-        padding: 50px 15px;
-    }
-}
-
-
-/* Existing CSS... */
-
-/* Custom Footer Styling */
-.custom-footer {
-    background-color: var(--brand-blue) !important; /* Force brand blue background */
-    color: var(--white) !important; /* White text */
-    padding: 2rem 1rem !important; /* More padding */
-    border-top: none !important; /* Remove any default border-top from flowbite */
-}
-
-.custom-footer .text-gray-900,
-.custom-footer .text-gray-700,
-.custom-footer .text-white {
-    /* This is tricky as Flowbite uses Tailwind classes.
-       You might need to target specific Flowbite elements if the above doesn't work.
-       For example, the name prop of FooterBrand might get default text color. */
-    color: var(--white) !important; /* Ensure all text is white */
-}
-
-/* Adjust FlowbiteLink colors */
-.custom-footer .footer-link-group a {
-    color: var(--white) !important;
-    transition: color 0.3s ease;
-}
-
-.custom-footer .footer-link-group a:hover {
-    color: var(--brand-green) !important; /* Hover effect with brand green */
-}
-
-/* For copyright text */
-.custom-footer .footer-copyright-wrapper span {
-    color: var(--white) !important;
-}
-
-/* Further overrides if needed for specific Flowbite elements */
-.custom-footer .flex.items-center.sm\\:justify-between div div.text-gray-900.dark\\:text-white.text-xl.font-semibold {
-    color: var(--white) !important; /* Target the brand name text */
 }

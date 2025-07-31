@@ -1,0 +1,100 @@
+/* frontend/src/styles/FeatureImageCard.css */
+
+/* Define Brand Colors (ensure these are globally available or also defined here) */
+/* Ideally, these should be in a global file like index.css or App.css */
+:root {
+    --brand-blue: #1E5FA2; /* A strong blue from your logo */
+    --brand-green: #47A04B; /* A vibrant green from your logo */
+    --text-dark: #333;
+    --text-light: #f8f8f8;
+    --light-bg: #f8f8f8;
+    --white: #ffffff;
+    --overlay-color: rgba(0, 0, 0, 0.6); /* Darker tint for overlay */
+}
+
+/* Feature Image Card Styling (Original styles applied here) */
+.feature-image-card {
+    position: relative;
+    width: 100%;
+    height: 300px; /* Fixed height for cards */
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+}
+
+.feature-image-card:hover {
+    transform: translateY(-8px); /* Lift effect on hover */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.card-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.4s ease-out; /* Smooth zoom on hover */
+}
+
+.feature-image-card:hover .card-image {
+    transform: scale(1.05); /* Slight zoom on hover */
+}
+
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay-color); /* Dark tint */
+    opacity: 0; /* Hidden initially */
+    transition: opacity 0.3s ease-out;
+}
+
+.feature-image-card:hover .card-overlay {
+    opacity: 1; /* Fully visible on hover */
+}
+
+.card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    color: var(--white);
+    text-align: left; /* Align text to left */
+    opacity: 0; /* Hidden initially */
+    transform: translateY(20px); /* Start slightly below */
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+    z-index: 2; /* Ensure content is above overlay */
+}
+
+.feature-image-card:hover .card-content {
+    opacity: 1; /* Visible on hover */
+    transform: translateY(0); /* Slide up to position */
+    color: white;
+}
+
+.card-content h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: var(--white); /* Ensure headings are white on overlay */
+}
+
+.card-content p {
+    font-size: 0.95em;
+    line-height: 1.4;
+    margin-bottom: 0;
+    color: var(--white);
+}
+
+/* Basic Responsive adjustments for cards */
+@media (max-width: 768px) {
+    .feature-image-card {
+        height: 250px; /* Adjust height for smaller screens if needed */
+    }
+}

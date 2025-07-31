@@ -1,37 +1,44 @@
-// frontend/src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion'; // Import AnimatePresence
+
 import Header from './components/Header';
+import Home from './pages/Home';
+import Expeditions from './pages/ExpeditionList';
+import About from './pages/About';
+import Blogs from './pages/Blog';
 import AppFooter from './components/Footer';
 
-// Page Components
-import Home from './pages/Home';
-import ExpeditionList from './pages/ExpeditionList';
-import ExpeditionDetail from './pages/ExpeditionDetail';
-import About from './pages/About';
-import Blog from './pages/Blog';
-import Login from './pages/Login';
-import Register from './pages/Register';
+import './App.css'; // Your main app CSS
 
 function App() {
+    const location = useLocation(); // Hook to get the current location for AnimatePresence
+
+    return (
+        <div className="app-container">
+            <Header />
+            {/* AnimatePresence for page transitions */}
+            <AnimatePresence mode='wait'> {/* 'wait' mode waits for the exit animation to complete before new component renders */}
+                <Routes location={location} key={location.pathname}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/expeditions" element={<Expeditions />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/blogs" element={<Blogs />} />
+                    {/* Add other routes as needed */}
+                </Routes>
+            </AnimatePresence>
+            <AppFooter />
+        </div>
+    );
+}
+
+// Wrap App with Router outside, so useLocation works
+function RootApp() {
     return (
         <Router>
-            <Header />
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/expeditions" element={<ExpeditionList />} />
-                <Route path="/expeditions/:slug" element={<ExpeditionDetail />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/blogs" element={<Blog />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                {/* Fallback for unknown routes */}
-                <Route path="*" element={<div>404 Not Found</div>} />
-            </Routes>
-            <br/>
-            <AppFooter />
+            <App />
         </Router>
     );
 }
 
-export default App;
+export default RootApp;

@@ -1,7 +1,7 @@
 // frontend/src/components/FeatureImageCard.jsx
 import React from 'react';
 import { motion } from 'framer-motion';
-
+import '../components/FeatureImageCard.css';
 const FeatureImageCard = ({ image, title, description, delay = 0 }) => {
     // Variants for the card's entry animation
     const cardVariants = {
@@ -32,7 +32,7 @@ const FeatureImageCard = ({ image, title, description, delay = 0 }) => {
             <div className="card-overlay"></div>
             <div className="card-content">
                 <h3>{title}</h3>
-                <p>{description}</p>
+                <p style={{color:'white'}}>{description}</p>
             </div>
         </motion.div>
     );

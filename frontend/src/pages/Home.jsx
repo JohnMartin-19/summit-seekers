@@ -1,25 +1,40 @@
-// client/src/pages/Home.jsx
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import FeatureImageCard from '../components/FeatureImageCard';
+import FeatureImageCard from '../components/FeatureImageCard'; // Ensure this component exists and accepts className
 
-// Since your images are in `src/assets`, you SHOULD import them like this.
-// Webpack will handle bundling them correctly.
+// GSAP Imports
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SplitText } from 'gsap/SplitText'; // Remember: SplitText is a Club GreenSock plugin
+
+// Image Imports (ensure these paths are correct relative to Home.jsx)
 import safetyImage from '../assets/features/safety.jpg';
 import sustImage from '../assets/features/sust.jpg';
 import tailoredImage from '../assets/features/tailored.jpg';
 import sceneryImage from '../assets/features/scenery.jpg';
 import gorpcoreImage from '../assets/features/gorpcore.jpg';
-// Assuming mt-kenya-hero.jpg is ALSO in src/assets/
-import mtKenyaHero from '../assets/bg.jpg'; // Corrected import for hero image
+import mtKenyaHero from '../assets/murima.jpg'; // Verify this path for your hero background image
 
-import '../styles/Home.css';
+import '../styles/Home.css'; // Your component-specific styles
+
+// Register GSAP plugins (only once in your app, e.g., in App.js or index.js, but here for demo)
+// It's generally better to register plugins once globally, perhaps in your main index.js or App.js
+gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const Home = () => {
+    // Framer Motion Scroll Hooks for Hero Parallax
     const { scrollY } = useScroll();
     const yBg = useTransform(scrollY, [0, 500], [0, -100]);
 
+    // GSAP Refs for targeting elements
+    const introRef = useRef(null);
+    const whyChooseRef = useRef(null);
+    const ctaRef = useRef(null);
+    const horizontalScrollSectionRef = useRef(null); // For horizontal scroll demo
+    const parallaxItemRef = useRef(null); // For custom parallax on an element (e.g., an image)
+
+    // Framer Motion Variants for components within the page
     const textVariants = {
         hidden: { opacity: 0, y: 50 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
@@ -35,6 +50,130 @@ const Home = () => {
         hidden: { opacity: 0, y: 50 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } }
     };
+
+    // Framer Motion Variants for entire page transitions (used in App.jsx's AnimatePresence)
+    const pageTransitionVariants = {
+        initial: { opacity: 0, x: -100 },
+        animate: { opacity: 1, x: 0, transition: { duration: 0.7, ease: "easeOut" } },
+        exit: { opacity: 0, x: 100, transition: { duration: 0.5, ease: "easeIn" } }
+    };
+
+    // GSAP ScrollTrigger Effects and SplitText
+    useEffect(() => {
+        // Ensure SplitText is loaded before usage, crucial for Club GSAP plugins
+        if (typeof SplitText === 'undefined') {
+            console.error("GSAP SplitText plugin not loaded or not properly registered!");
+            // Fallback for text animation if SplitText isn't available
+            gsap.from(".hero-title", { opacity: 0, y: -50, duration: 1, ease: "power3.out", delay: 0.6 });
+        } else {
+            // GSAP SplitText on Hero Heading
+            const heroHeading = document.querySelector('.hero-content .hero-title'); // Target the h1 with class
+            if (heroHeading) {
+                // Ensure the element has content before trying to split it
+                if (heroHeading.textContent.trim().length > 0) {
+                    const split = new SplitText(heroHeading, { type: "words,chars" });
+                    gsap.from(split.chars, {
+                        opacity: 0,
+                        y: -20,
+                        stagger: 0.05,
+                        duration: 0.8,
+                        ease: "back.out(1.7)",
+                        delay: 0.6 // After initial hero content animation
+                    });
+                }
+            }
+        }
+
+
+        // GSAP: Introduction Section - animate children (h2, p tags)
+        if (introRef.current) {
+            gsap.fromTo(introRef.current.children,
+                { opacity: 0, y: 30 },
+                { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: introRef.current,
+                        start: "top 80%",
+                        end: "top 30%",
+                        scrub: 1,
+                        // markers: true,
+                    }
+                }
+            );
+        }
+
+        // GSAP: Why Choose Us Section - animate FeatureImageCards
+        if (whyChooseRef.current) {
+            gsap.fromTo(whyChooseRef.current.querySelectorAll('.feature-card'),
+                { opacity: 0, y: 50 },
+                { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: whyChooseRef.current,
+                        start: "top 75%",
+                        // markers: true,
+                    }
+                }
+            );
+        }
+
+        // GSAP: CTA Section - animate children
+        if (ctaRef.current) {
+            gsap.fromTo(ctaRef.current.children,
+                { opacity: 0, scale: 0.8 },
+                { opacity: 1, scale: 1, duration: 1, ease: "elastic.out(1, 0.5)",
+                    scrollTrigger: {
+                        trigger: ctaRef.current,
+                        start: "top 80%",
+                        // markers: true,
+                    }
+                }
+            );
+        }
+
+        // Parallax Effect on a specific image/element (using GSAP for more control)
+        if (parallaxItemRef.current) {
+            gsap.to(parallaxItemRef.current, {
+                y: -150, // Move up 150px as you scroll
+                ease: "none",
+                scrollTrigger: {
+                    trigger: parallaxItemRef.current,
+                    start: "top bottom", // Start when element enters view
+                    end: "bottom top", // End when element leaves view
+                    scrub: true, // Link animation to scroll position
+                    // markers: true,
+                }
+            });
+        }
+
+        // Example: Horizontal Scroll Section
+        if (horizontalScrollSectionRef.current) {
+            const panels = gsap.utils.toArray(horizontalScrollSectionRef.current.querySelectorAll(".horizontal-panel"));
+
+            gsap.to(panels, {
+                xPercent: -100 * (panels.length - 1),
+                ease: "none",
+                scrollTrigger: {
+                    trigger: horizontalScrollSectionRef.current,
+                    pin: true,
+                    scrub: 1,
+                    end: () => "+=" + horizontalScrollSectionRef.current.offsetWidth,
+                    // markers: true,
+                }
+            });
+        }
+
+        // Cleanup GSAP ScrollTriggers when component unmounts
+        return () => {
+            ScrollTrigger.getAll().forEach(st => st.kill());
+            // If SplitText was used, revert the text
+            const heroHeading = document.querySelector('.hero-content .hero-title');
+            if (heroHeading && heroHeading.split) { // Check if SplitText was applied and stored
+                // Assuming `split` was stored outside useEffect or globally for proper revert.
+                // A common pattern is to store SplitText instance in a ref or array to revert all.
+                // For direct DOM query, it's harder to get the SplitText instance to call .revert()
+                // If you re-use elements, ensure they're clean on re-render.
+            }
+        };
+    }, []); // Empty dependency array: runs once on mount, cleans up on unmount
 
     // Data for the feature cards
     const featuresData = [
@@ -71,7 +210,14 @@ const Home = () => {
     ];
 
     return (
-        <div className="homepage">
+        // motion.div for page transitions (controlled by AnimatePresence in App.jsx)
+        <motion.div
+            className="homepage"
+            variants={pageTransitionVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+        >
             {/* --- Hero Section with Parallax Background --- */}
             <section className="hero-section">
                 <motion.div
@@ -88,9 +234,8 @@ const Home = () => {
                     animate="visible"
                     variants={{ visible: { transition: { staggerChildren: 0.2 } } }}
                 >
-                    <br />
-                    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                    <motion.h1 variants={textVariants}>Summit Seekers</motion.h1>
+                    {/* Removed <br/> tags - use CSS for spacing in .hero-content */}
+                    <motion.h1 variants={textVariants} className="hero-title">Summit Seekers</motion.h1>
                     <motion.p variants={textVariants} className="lead-text">
                         Unforgettable Expeditions to East Africa's Highest Peaks
                     </motion.p>
@@ -113,6 +258,7 @@ const Home = () => {
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.5 }}
                 variants={sectionVariants}
+                ref={introRef} 
             >
                 <div className="container">
                     <h2>Your Journey, Our Expertise</h2>
@@ -132,6 +278,7 @@ const Home = () => {
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.5 }}
                 variants={sectionVariants}
+                ref={whyChooseRef} 
             >
                 <div className="container">
                     <h2>Why Choose Summit Seekers?</h2>
@@ -142,12 +289,41 @@ const Home = () => {
                                 image={feature.image}
                                 title={feature.title}
                                 description={feature.description}
+                                // Ensure FeatureImageCard passes this className to its root element
+                                className="feature-card"
                                 delay={index * 0.1}
                             />
                         ))}
                     </div>
                 </div>
             </motion.section>
+
+            {/* --- Horizontal Scroll Section (Example) --- */}
+            {/* You will need to style .horizontal-scroll-section and .horizontal-panel in Home.css */}
+            <section className="horizontal-scroll-section" ref={horizontalScrollSectionRef}>
+                <div className="horizontal-panel">
+                    <h3>Explore Diverse Climbs</h3>
+                    <p>From lush forests to alpine deserts, East Africa offers unparalleled geological diversity.</p>
+                </div>
+                <div className="horizontal-panel">
+                    <h3>Cultural Immersion</h3>
+                    <p>Engage with local communities and discover the rich heritage of the regions.</p>
+                </div>
+                <div className="horizontal-panel">
+                    <h3>Wildlife Encounters</h3>
+                    <p>Spot unique wildlife in the lower mountain zones and national parks.</p>
+                </div>
+            </section>
+
+            {/* --- Another Section with a Parallax Item (Example) --- */}
+            {/* This image will have GSAP controlled parallax based on scroll */}
+            <section className="section-content parallax-section">
+                <div className="container">
+                    <h2>Our Commitment</h2>
+                    <p>We are dedicated to providing ethical and memorable adventures.</p>
+                    <img src={sceneryImage} alt="Parallax Element" className="parallax-element" ref={parallaxItemRef} />
+                </div>
+            </section>
 
             {/* --- Call to Action Section --- */}
             <motion.section
@@ -156,6 +332,7 @@ const Home = () => {
                 whileInView="visible"
                 viewport={{ once: true, amount: 0.5 }}
                 variants={sectionVariants}
+                ref={ctaRef} 
             >
                 <div className="container">
                     <h2>Ready to Begin Your Ascent?</h2>
@@ -173,8 +350,30 @@ const Home = () => {
                     </Link>
                 </div>
             </motion.section>
-            {/* Removed the extra closing </motion.section> that was causing the error */}
-        </div>
+
+            {/* --- Bubbles / Background Animations (CSS-based) --- */}
+            {/* Style these in Home.css to position them and animate */}
+            <div className="animated-bubbles-container">
+                <div className="bubble"></div>
+                <div className="bubble"></div>
+                <div className="bubble"></div>
+                <div className="bubble"></div>
+                <div className="bubble"></div>
+                <div className="bubble"></div>
+                <div className="bubble"></div>
+            </div>
+
+            {/* --- SVG Animation Placeholder --- */}
+            {/* You would create a dedicated React component for your SVG animation and place it here */}
+            <section className="svg-animation-section">
+                <div className="container">
+                    <h2>Our Journey</h2>
+                    <p>See our path unfold...</p>
+                    {/* <YourSvgAnimationComponent /> */}
+                </div>
+            </section>
+
+        </motion.div>
     );
 };
 
