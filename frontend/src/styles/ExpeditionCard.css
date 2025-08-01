@@ -1,0 +1,107 @@
+/* frontend/src/styles/ExpeditionCard.css */
+
+.expedition-card {
+    background-color: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative; /* For sold-out overlay */
+    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.expedition-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card-image-wrapper {
+    width: 100%;
+    height: 200px; /* Fixed height for image */
+    overflow: hidden;
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease-out;
+}
+
+.expedition-card:hover .card-image {
+    transform: scale(1.05);
+}
+
+.card-content {
+    padding: 20px;
+    flex-grow: 1; /* Allows content to take up remaining space */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-content h3 {
+    font-size: 1.6em;
+    color: var(--brand-blue);
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+.card-content p {
+    font-size: 0.95em;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.card-price {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--brand-green);
+    margin-top: 10px;
+}
+
+.card-difficulty {
+    text-transform: capitalize; /* Make difficulty level look nice */
+}
+
+.read-more-btn {
+    background-color: var(--brand-blue);
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 15px;
+    transition: background-color 0.3s ease;
+    align-self: flex-start; /* Align button to start within flex column */
+}
+
+.read-more-btn:hover {
+    background-color: var(--brand-green);
+}
+
+/* Sold Out State */
+.expedition-card.sold-out {
+    opacity: 0.7; /* Dim the card */
+    pointer-events: none; /* Disable clicks */
+}
+
+.sold-out-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 0, 0, 0.6); /* Red overlay */
+    color: var(--white);
+    font-size: 2.5em;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}

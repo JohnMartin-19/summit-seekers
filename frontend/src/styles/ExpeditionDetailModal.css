@@ -1,0 +1,122 @@
+/* frontend/src/styles/ExpeditionDetailModal.css */
+
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* High z-index to appear above everything */
+}
+
+.modal-content {
+    background-color: var(--white);
+    border-radius: 10px;
+    padding: 40px;
+    position: relative;
+    max-width: 800px; /* Max width for the modal */
+    max-height: 90vh; /* Max height to allow scrolling if content is long */
+    overflow-y: auto; /* Enable vertical scrolling */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    color: var(--text-dark);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 2.5em;
+    color: var(--text-dark);
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    transition: color 0.2s ease;
+}
+
+.modal-close-btn:hover {
+    color: #f00; /* Red on hover */
+}
+
+.modal-title {
+    font-size: 2.5em;
+    color: var(--brand-blue);
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.modal-price,
+.modal-duration,
+.modal-difficulty {
+    font-size: 1.1em;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.modal-price {
+    font-weight: bold;
+    color: var(--brand-green);
+    font-size: 1.3em;
+}
+
+.modal-difficulty {
+    text-transform: capitalize;
+}
+
+.modal-section {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.modal-section h3 {
+    font-size: 1.5em;
+    color: var(--brand-blue);
+    margin-bottom: 10px;
+}
+
+.modal-section p {
+    font-size: 1em;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    white-space: pre-wrap; /* Preserve formatting for itinerary/included */
+}
+
+.modal-actions {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.add-to-cart-btn {
+    background-color: var(--brand-green);
+    color: var(--white);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+    background-color: var(--brand-blue);
+}
+
+/* Responsive adjustments for modal */
+@media (max-width: 768px) {
+    .modal-content {
+        max-width: 95%; /* Make modal wider on smaller screens */
+        padding: 25px;
+    }
+    .modal-title {
+        font-size: 2em;
+    }
+    .modal-section h3 {
+        font-size: 1.3em;
+    }
+}

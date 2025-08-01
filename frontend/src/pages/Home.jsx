@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import FeatureImageCard from '../components/FeatureImageCard'; // Ensure this component exists and accepts className
-
+import AnimatedPathSVG from '../components/AnimatedPathSVG'; 
 // GSAP Imports
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -14,27 +14,25 @@ import sustImage from '../assets/features/sust.jpg';
 import tailoredImage from '../assets/features/tailored.jpg';
 import sceneryImage from '../assets/features/scenery.jpg';
 import gorpcoreImage from '../assets/features/gorpcore.jpg';
-import mtKenyaHero from '../assets/murima.jpg'; // Verify this path for your hero background image
+import mtKenyaHero from '../assets/murima.jpg'; 
 
-import '../styles/Home.css'; // Your component-specific styles
+import '../styles/Home.css'; 
 
-// Register GSAP plugins (only once in your app, e.g., in App.js or index.js, but here for demo)
-// It's generally better to register plugins once globally, perhaps in your main index.js or App.js
+
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
 const Home = () => {
-    // Framer Motion Scroll Hooks for Hero Parallax
+   
     const { scrollY } = useScroll();
     const yBg = useTransform(scrollY, [0, 500], [0, -100]);
 
-    // GSAP Refs for targeting elements
+  
     const introRef = useRef(null);
     const whyChooseRef = useRef(null);
     const ctaRef = useRef(null);
-    const horizontalScrollSectionRef = useRef(null); // For horizontal scroll demo
-    const parallaxItemRef = useRef(null); // For custom parallax on an element (e.g., an image)
+    const horizontalScrollSectionRef = useRef(null); 
+    const parallaxItemRef = useRef(null); 
 
-    // Framer Motion Variants for components within the page
     const textVariants = {
         hidden: { opacity: 0, y: 50 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
@@ -51,25 +49,23 @@ const Home = () => {
         visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } }
     };
 
-    // Framer Motion Variants for entire page transitions (used in App.jsx's AnimatePresence)
     const pageTransitionVariants = {
         initial: { opacity: 0, x: -100 },
         animate: { opacity: 1, x: 0, transition: { duration: 0.7, ease: "easeOut" } },
         exit: { opacity: 0, x: 100, transition: { duration: 0.5, ease: "easeIn" } }
     };
 
-    // GSAP ScrollTrigger Effects and SplitText
     useEffect(() => {
-        // Ensure SplitText is loaded before usage, crucial for Club GSAP plugins
+       
         if (typeof SplitText === 'undefined') {
             console.error("GSAP SplitText plugin not loaded or not properly registered!");
-            // Fallback for text animation if SplitText isn't available
+           
             gsap.from(".hero-title", { opacity: 0, y: -50, duration: 1, ease: "power3.out", delay: 0.6 });
         } else {
-            // GSAP SplitText on Hero Heading
-            const heroHeading = document.querySelector('.hero-content .hero-title'); // Target the h1 with class
+            
+            const heroHeading = document.querySelector('.hero-content .hero-title'); 
             if (heroHeading) {
-                // Ensure the element has content before trying to split it
+                
                 if (heroHeading.textContent.trim().length > 0) {
                     const split = new SplitText(heroHeading, { type: "words,chars" });
                     gsap.from(split.chars, {
@@ -317,13 +313,13 @@ const Home = () => {
 
             {/* --- Another Section with a Parallax Item (Example) --- */}
             {/* This image will have GSAP controlled parallax based on scroll */}
-            <section className="section-content parallax-section">
+            {/* <section className="section-content parallax-section">
                 <div className="container">
                     <h2>Our Commitment</h2>
                     <p>We are dedicated to providing ethical and memorable adventures.</p>
                     <img src={sceneryImage} alt="Parallax Element" className="parallax-element" ref={parallaxItemRef} />
                 </div>
-            </section>
+            </section> */}
 
             {/* --- Call to Action Section --- */}
             <motion.section
@@ -363,13 +359,12 @@ const Home = () => {
                 <div className="bubble"></div>
             </div>
 
-            {/* --- SVG Animation Placeholder --- */}
-            {/* You would create a dedicated React component for your SVG animation and place it here */}
+           
             <section className="svg-animation-section">
                 <div className="container">
                     <h2>Our Journey</h2>
                     <p>See our path unfold...</p>
-                    {/* <YourSvgAnimationComponent /> */}
+                    <AnimatedPathSVG /> 
                 </div>
             </section>
 

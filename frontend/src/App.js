@@ -4,7 +4,7 @@ import { AnimatePresence } from 'framer-motion'; // Import AnimatePresence
 
 import Header from './components/Header';
 import Home from './pages/Home';
-import Expeditions from './pages/ExpeditionList';
+import Expeditions from './pages/Expeditions';
 import About from './pages/About';
 import Blogs from './pages/Blog';
 import AppFooter from './components/Footer';

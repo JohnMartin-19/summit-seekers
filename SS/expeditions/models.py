@@ -26,6 +26,7 @@ class Expedition(models.Model):
     is_active = models.BooleanField(default=True, help_text="Is this expedition currently open for bookings?")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    image = models.ImageField(upload_to='expedition_images/',blank=True,null=True)
 
     def __str__(self):
         return self.name

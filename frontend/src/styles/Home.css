@@ -1,24 +1,20 @@
-/* frontend/src/styles/Home.css */
 
-/* --- Page Transition Styles --- */
-/* These styles will be applied by Framer Motion's AnimatePresence */
 .homepage {
-    /* Ensure the homepage content takes up space, especially before transitions finish */
-    position: relative; /* Or static if not overlapping */
-    min-height: 100vh; /* Ensure enough height for scrolling */
-    overflow-x: hidden; /* Prevent horizontal scroll from page transitions */
+    position: relative; 
+    min-height: 100vh; 
+    overflow-x: hidden; 
 }
 
-/* --- Hero Section --- */
+
 .hero-section {
     position: relative;
-    height: 100vh; /* Full viewport height */
+    height: 100vh; 
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* Important for parallax */
+    overflow: hidden; 
     text-align: center;
-    color: white; /* Ensure text is visible on hero background */
+    color: white; 
 }
 
 .hero-background {
@@ -26,10 +22,10 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 120%; /* Taller than viewport for parallax effect */
+    height: 120%; 
     background-size: cover;
-    background-position: center bottom; /* Adjust as needed */
-    z-index: -1; /* Behind content */
+    background-position: center bottom; 
+    z-index: -1; 
 }
 
 .hero-overlay {
@@ -38,7 +34,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    background-color: rgba(0, 0, 0, 0.5); 
     z-index: -1;
 }
 
@@ -47,10 +43,12 @@
     z-index: 1;
     padding: 20px;
     max-width: 800px;
+    padding-top: 30vh; 
+    padding-bottom: 10vh;
 }
 
 .hero-content h1 {
-    font-size: 4em; /* Adjust as needed */
+    font-size: 4em; 
     margin-bottom: 20px;
     line-height: 1.1;
     font-weight: 700;
@@ -69,21 +67,20 @@
     border-radius: 5px;
     font-size: 1.2em;
     cursor: pointer;
-    text-decoration: none; /* For Link */
-    display: inline-block; /* For Link */
+    text-decoration: none; 
+    display: inline-block; 
 }
 
 .explore-button:hover {
-    background-color: #3e8e41; /* Darker green on hover */
+    background-color: #3e8e41; 
 }
 
-/* --- General Section Styles --- */
 .section-content {
     padding: 80px 20px;
     text-align: center;
     max-width: 1200px;
     margin: 0 auto;
-    opacity: 0; /* Will be animated by GSAP/Framer Motion */
+    opacity: 0; 
 }
 
 .section-content.bg-light-gray {
@@ -111,7 +108,7 @@
     margin-top: 40px;
 }
 
-/* Feature Card (assuming FeatureImageCard has a root class 'feature-card') */
+
 .feature-card {
     background-color: var(--white);
     padding: 20px;
@@ -158,24 +155,26 @@
 
 /* --- Bubbles Animation --- */
 .animated-bubbles-container {
-    position: fixed; /* Or absolute within a section */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -2; /* Behind everything */
+    z-index: 0; 
     overflow: hidden;
-    pointer-events: none; /* Bubbles don't block clicks */
+    pointer-events: none;
 }
 
 .bubble {
     position: absolute;
-    background-color: rgba(255, 255, 255, 0.1); /* Transparent white bubbles */
+    background-color: rgba(29, 194, 81, 0.15); 
     border-radius: 50%;
-    animation: floatBubbles 15s infinite ease-in-out; /* Animation name, duration, timing */
+    animation: floatBubbles 15s infinite ease-in-out;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
 }
 
-/* Individual bubble sizes and positions */
+
+
 .bubble:nth-child(1) { width: 40px; height: 40px; left: 10%; top: 20%; animation-duration: 18s; animation-delay: 0s; }
 .bubble:nth-child(2) { width: 60px; height: 60px; left: 30%; top: 50%; animation-duration: 15s; animation-delay: 2s; }
 .bubble:nth-child(3) { width: 50px; height: 50px; left: 70%; top: 10%; animation-duration: 20s; animation-delay: 4s; }
@@ -192,19 +191,19 @@
 
 /* --- Horizontal Scroll Section --- */
 .horizontal-scroll-section {
-    display: flex; /* Make it a flex container */
-    width: 300%; /* Example: 3 panels of 100% width each */
-    height: 100vh; /* Or desired height */
-    position: relative; /* Needed for pinning */
-    overflow: hidden; /* Hide panels outside viewport initially */
-    background-color: #ADD8E6; /* Light blue background for this section */
+    display: flex;
+    width: 300%; 
+    height: 100vh; 
+    position: relative; 
+    overflow: hidden; 
+    background-color: #ADD8E6; 
     color: var(--text-dark);
 }
 
 .horizontal-panel {
-    width: 100vw; /* Each panel takes full viewport width */
+    width: 100vw; 
     height: 100%;
-    flex-shrink: 0; /* Prevent panels from shrinking */
+    flex-shrink: 0; 
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -236,18 +235,22 @@
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* --- SVG Animation Section (Placeholder Styling) --- */
+
 .svg-animation-section {
     padding: 80px 20px;
     text-align: center;
-    background-color: var(--light-gray); /* Or appropriate background */
+    background-color: var(--light-bg); 
 }
 
-/* ... existing CSS ... */
+.animated-svg {
+    max-width: 100%;
+    height: auto;
+    display: block; 
+    margin: 40px auto;
+}
 
-/* Remove the extra <br/> tags from your Home.jsx hero content and use CSS for spacing */
 .hero-content {
-    padding-top: 20vh; /* Adjust as needed to push content down */
+    padding-top: 20vh; 
     padding-bottom: 10vh;
 }
 
