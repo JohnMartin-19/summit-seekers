@@ -5,6 +5,7 @@ import uuid
 class Expedition(models.Model):
     name = models.CharField(max_length=250, help_text='Mt Kenya 3-day')
     slug = models.SlugField(unique=True, help_text="A short label for URLs, mount-kenya-3-day")
+    dates = models.DateTimeField(null=True, blank=True)
     duration_days = models.IntegerField(help_text="Number of days for the expedition")
     difficulty_level = models.CharField(
         max_length=50,

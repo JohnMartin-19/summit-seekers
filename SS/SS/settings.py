@@ -49,9 +49,9 @@ CRISPY_ALLOWED_TEMPLATES_PACK = 'bootstrap5'
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 # CORS Settings
-CORS_ALLOW_ALL_ORIGINS = False # Set to False for production!
+CORS_ALLOW_ALL_ORIGINS = False 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000", # React development server
+    "http://localhost:3000", 
     "http://127.0.0.1:3000",
     "https://your-react-app-domain.com", 
 ]

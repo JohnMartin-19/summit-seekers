@@ -20,7 +20,7 @@ class ExpeditionSerializer(serializers.ModelSerializer):
             'price_per_person', 'description', 'itinerary',
             'included_services', 'excluded_services', 'max_participants',
             'min_participants', 'is_active', 'available_dates',
-            'created_at', 'updated_at'
+            'created_at', 'updated_at','dates','image'
         ]
         lookup_field = 'slug' # Allow detail views by slug
         extra_kwargs = {'url': {'lookup_field': 'slug'}} # For HyperlinkedIdentityField if used

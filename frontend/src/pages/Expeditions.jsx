@@ -1,12 +1,11 @@
 // frontend/src/pages/Expeditions.jsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import ExpeditionCard from '../components/ExpeditionCard'; // We'll create this next
-import ExpeditionDetailModal from '../components/ExpeditionDetailModal'; // We'll create this after
-import '../styles/Expeditions.css'; // Create this CSS file
+import ExpeditionCard from '../components/ExpeditionCard'; 
+import ExpeditionDetailModal from '../components/ExpeditionDetailModal'; 
+import '../styles/Expeditions.css';
 import heroExpeditionsImage from '../assets/murima3.jpg'; 
 
-// Framer Motion Variants for page transitions
 const pageTransitionVariants = {
     initial: { opacity: 0, x: -100 },
     animate: { opacity: 1, x: 0, transition: { duration: 0.7, ease: "easeOut" } },
@@ -21,16 +20,17 @@ const Expeditions = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Function to fetch expeditions from your Django backend API
+       
         const fetchExpeditions = async () => {
             try {
-                // Adjust this URL to your actual backend API endpoint for expeditions
-                const response = await fetch('/api/expeditions/'); // Example: /api/expeditions/
+               
+                const response = await fetch('http://localhost:8001/api/v1/expeditions/'); 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const data = await response.json();
-                setExpeditions(data);
+                console.log("DATA",data)
+                setExpeditions(data.results);
             } catch (error) {
                 console.error("Error fetching expeditions:", error);
                 setError("Failed to load expeditions. Please try again later.");
@@ -40,7 +40,7 @@ const Expeditions = () => {
         };
 
         fetchExpeditions();
-    }, []); // Empty dependency array means this runs once on component mount
+    }, []); 
 
     const handleReadMore = (expedition) => {
         setSelectedExpedition(expedition);
@@ -109,7 +109,7 @@ const Expeditions = () => {
                         <div className="expedition-cards-grid">
                             {expeditions.map((expedition) => (
                                 <ExpeditionCard
-                                    key={expedition.slug} // Assuming slug is unique and good for key
+                                    key={expedition.id} 
                                     expedition={expedition}
                                     onReadMore={handleReadMore}
                                 />
