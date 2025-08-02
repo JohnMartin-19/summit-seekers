@@ -1,14 +1,13 @@
-// frontend/src/components/ExpeditionCard.jsx
+
 import React from 'react';
 import { motion } from 'framer-motion';
-import '../styles/ExpeditionCard.css';
+import '../styles/ExpeditionCard.css'; 
 
 const ExpeditionCard = ({ expedition, onReadMore }) => {
 
     const isSoldOut = expedition.max_participants <= 0;
-    
+  
     const imageUrl = expedition.image
-
     const cardVariants = {
         hidden: { opacity: 0, y: 50 },
         visible: {
@@ -27,10 +26,13 @@ const ExpeditionCard = ({ expedition, onReadMore }) => {
             viewport={{ once: true, amount: 0.2 }}
         >
             {isSoldOut && <div className="sold-out-overlay">SOLD OUT</div>}
+
+            {/* Image Wrapper with img tag */}
             <div className="card-image-wrapper">
                 <img src={imageUrl} alt={expedition.name} className="card-image" />
             </div>
-          
+
+            {/* Card Content with details */}
             <div className="card-content">
                 <h3>{expedition.name}</h3>
                 <p className="card-price">From ${expedition.price_per_person}</p>
